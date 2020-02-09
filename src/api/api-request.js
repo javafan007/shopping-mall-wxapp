@@ -1,33 +1,33 @@
 let Fly = require('flyio/dist/npm/wx')
 let fly = new Fly()
 
-class Response {
-  constructor (res) {
-    this.rawData = res
-    this.code = res.code
-    this.messages = res.messages
-    this.data = res.data
-    this.wwRequestEntity = res.wwRequestEntity
-  }
-
-  resolve () {
-    if (this.isSuccess()) {
-      return Promise.resolve(this.rawData)
-    }
-    if (this.isError()) {
-      this.message = '错误'
-    }
-    return Promise.reject(this.messages)
-  }
-
-  isSuccess () {
-    return this.code === 0
-  }
-
-  isError () {
-    return this.code !== 0
-  }
-}
+// class Response {
+//   constructor (res) {
+//     this.rawData = res
+//     this.code = res.code
+//     this.messages = res.messages
+//     this.data = res.data
+//     this.wwRequestEntity = res.wwRequestEntity
+//   }
+//
+//   resolve () {
+//     if (this.isSuccess()) {
+//       return Promise.resolve(this.rawData)
+//     }
+//     if (this.isError()) {
+//       this.message = '错误'
+//     }
+//     return Promise.reject(this.messages)
+//   }
+//
+//   isSuccess () {
+//     return this.code === 0
+//   }
+//
+//   isError () {
+//     return this.code !== 0
+//   }
+// }
 
 class ApiManager {
   constructor (apiPrefix) {
@@ -42,11 +42,7 @@ class ApiManager {
     })
 
     fly.interceptors.response.use(res => {
-      if (res.status >= 200 && res.status < 300) {
-        let response = new Response(res.data)
-        return response.resolve()
-      }
-      return Promise.reject(res)
+      return Promise.resolve(res.data.info)
     }, error => {
       const { response } = error
       if (!response) return Promise.reject(error)
